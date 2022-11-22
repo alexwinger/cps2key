@@ -2,9 +2,9 @@
 ;
 ;                       ,---_---.
 ;                   +5V |1     8| GND
-;                   GP5 |2     7| GP0
-;                   GP4 |3     6| GP1
-;                   GP3 |4     5| GP2
+;                  data |2     7| nReset
+;                   GP4 |3     6| clock
+;                   GP3 |4     5| setup
 ;                       `-------'
 ;
 ;
@@ -21,16 +21,6 @@ processor 12F675
   CONFIG  CP = OFF              ; Code Protection bit (Program Memory code protection is disabled)
   CONFIG  CPD = OFF             ; Data Code Protection bit (Data memory code protection is disabled)
   
-;    __config 0x31D4
-;   _CPD_OFF & _CP_OFF & _BODEN_ON & _MCLRE_OFF & _PWRTE_OFF & _WDT_OFF 
-;   & _INTRC_OSC_NOCLKOUT 
- 
-; RAM-Variable
-LRAM_0x20 equ 0x20
-LRAM_0x21 equ 0x21
-LRAM_0x22 equ 0x22
-LRAM_0x23 equ 0x23
-
 
 resetPin equ 0
 clockPin equ 1
@@ -210,9 +200,9 @@ end_cps2_programming:
     BSF GPIO,resetPin
     
     MOVLW 0x03           ;   b'00000011'  d'003'
-    MOVWF LRAM_0x21
+    MOVWF _delay1
     MOVLW 0x97           ;   b'10010111'  d'151'
-    MOVWF LRAM_0x20
+    MOVWF _delay0
     CALL delay
     
     BCF GPIO,clockPin
